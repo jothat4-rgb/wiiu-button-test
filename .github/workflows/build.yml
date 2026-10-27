@@ -1,3 +1,4 @@
+
 name: Build Button Test
 
 on:
@@ -19,8 +20,15 @@ jobs:
       - name: Compile app
         run: cmake --build build
 
+      - name: Package WUHB
+        run: |
+          mkdir -p output
+          wuhbtool build/ButtonTest.rpx output/ButtonTest.wuhb --name="Button Test" --short-name="ButtonTest" --author="jothat4-rgb"
+
       - name: Save compiled files
         uses: actions/upload-artifact@v4
         with:
           name: button-test-build
-          path: build/
+          path: |
+            build/
+            output/
