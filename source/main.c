@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -9,14 +8,13 @@
 #include <coreinit/screen.h>
 #include <whb/proc.h>
 #include <vpad/input.h>
-#include <nsysnet/socket.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 
-/* Replace this example with Phone 1's local IP address. */
+/* Replace with your phone's local IP address. */
 #define PHONE_IP "10.178.61.104"
 #define PHONE_PORT 26761
 
@@ -48,9 +46,6 @@ int main(int argc, char **argv)
 
     OSScreenEnableEx(SCREEN_TV, TRUE);
     OSScreenEnableEx(SCREEN_DRC, TRUE);
-
-    /* Initialize Wii U networking. */
-    socket_lib_init();
 
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -107,11 +102,9 @@ int main(int argc, char **argv)
             OSScreenPutFontEx(
                 SCREEN_DRC, 0, 2, "GamePad input: OK"
             );
-
             OSScreenPutFontEx(
                 SCREEN_DRC, 0, 4, message
             );
-
             OSScreenPutFontEx(
                 SCREEN_TV, 0, 2, "Reading GamePad input"
             );
@@ -123,19 +116,10 @@ int main(int argc, char **argv)
             );
         }
 
-        if (networkReady)
-        {
-            OSScreenPutFontEx(
-                SCREEN_DRC, 0, 8, "UDP socket: READY"
-            );
-        }
-        else
-        {
-            OSScreenPutFontEx(
-                SCREEN_DRC, 0, 8, "UDP socket: FAILED"
-            );
-        }
-
+        OSScreenPutFontEx(
+            SCREEN_DRC, 0, 8,
+            networkReady ? "UDP socket: READY" : "UDP socket: FAILED"
+        );
         OSScreenPutFontEx(
             SCREEN_DRC, 0, 10, "UDP port: 26761"
         );
@@ -148,8 +132,6 @@ int main(int argc, char **argv)
     {
         close(sock);
     }
-
-    socket_lib_finish();
 
     OSScreenShutdown();
     WHBProcShutdown();
